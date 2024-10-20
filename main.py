@@ -60,9 +60,12 @@ def degrees_to_radians(angle_degrees):
 #         capture_image()
 #         time.sleep(3)
 
-def velocity_cmd_helper(spot, v_x=0.0, v_y=0.0, v_rot=0.0):
-    """Helper to send velocity commands to Spot."""
-    spot._start_robot_command(RobotCommandBuilder.synchro_velocity_command(v_x=v_x, v_y=v_y, v_rot=v_rot), end_time_secs=time.time() + 10)
+def move_by_velocity_control(self, v_x=0.0, v_y=0.0, v_rot=0.0, cmd_duration=5):
+        # v_x+ - forward, v_y+ - left | m/s, v_rot+ - counterclockwise |rad/s
+        self._start_robot_command(
+            RobotCommandBuilder.synchro_velocity_command(v_x=v_x*0.8, v_y=v_y*0.8, v_rot=v_rot*0.8),
+            end_time_secs=time.time() + cmd_duration)
+
 
 # Movement methods
 def move_forward(spot):
@@ -71,50 +74,32 @@ def move_forward(spot):
 def move_backward(spot):
     spot.move_to_goal(goal_x=-0.5, goal_y=0.0)
 
-def strafe_left(spot):
-    velocity_cmd_helper(spot, v_y=0.5)
+def turn_left(spot, duration=0.5):
+    spot.move_by_velocity_control(v_rot=0.5, cmd_duration=duration)
 
-def strafe_right(spot):
-    velocity_cmd_helper(spot, v_y=-0.5)
-
-def turn_left(spot):
-    velocity_cmd_helper(spot, v_rot=0.8)
-
-def turn_right(spot):
-    velocity_cmd_helper(spot, v_rot=-0.8)
 
 def run():
 
     flag = False
+    with SpotController(username=SPOT_USERNAME, password=SPOT_PASSWORD, robot_ip=ROBOT_IP) as spot:
+        if not flag:
+                spot.move_head_in_points(yaws=[0.2, 0], pitches=[0.3, 0],  rolls=[0.4, 0], sleep_after_point_reached=1)
+                flag = True
+        
+        move_forward(spot)
+        time.sleep(3)  # Sleep for a short period to let the movement complete
 
-    while True:
-        x = input("What do you want the dog to do? :" )
-        with SpotController(username=SPOT_USERNAME, password=SPOT_PASSWORD, robot_ip=ROBOT_IP) as spot:
-#         time.sleep(2)
-#         capture_image()
-#         # Move head to specified positions with intermediate time.sleep
-            if not flag:
-                spot.move_head_in_points(yaws=[0.2, 0], pitches=[0.3, 0],  rolls=[0.4, 0],sleep_after_point_reached=1)
-#         capture_image()
-            flag = True
-#         time.sleep(3)
-            #time.sleep(2)
-            # Move head to specified positions with intermediate time.sleep
+        # Move backward
+        move_backward(spot)
+        time.sleep(3)  # Sleep for a short period to let the movement complete
 
-            if x == "quit":
-                break
-            elif x == "w":
-                move_forward(spot)
-            elif x == "s":
-                move_backward(spot)
-            elif x == "a":
-                turn_left(spot)
-            elif x == "d":
-                turn_right(spot)
-            elif x == "q":
-                strafe_right(spot)
-            elif x == "e":
-                strafe_left(spot)
+        # Turn left
+        turn_left(spot, duration=1)
+        time.sleep(3) 
+    
+        
+                
+            
 
 
 if __name__ == '__main__':
