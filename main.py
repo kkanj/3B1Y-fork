@@ -94,7 +94,7 @@ def run():
         time.sleep(3)  # Sleep for a short period to let the movement complete
 
         # Turn left
-        turn_left(spot, duration=1)
+        turn_left(spot, duration=3)
         time.sleep(3) 
     
         
