@@ -3,6 +3,7 @@
 from spot_controller import SpotController
 from bosdyn.client.robot_command import RobotCommandBuilder
 import time
+import math
 
 #import math
 # import cv2
@@ -63,7 +64,7 @@ def degrees_to_radians(angle_degrees):
 def move_by_velocity_control(self, v_x=0.0, v_y=0.0, v_rot=0.0, cmd_duration=5):
         # v_x+ - forward, v_y+ - left | m/s, v_rot+ - counterclockwise |rad/s
         self._start_robot_command(
-            RobotCommandBuilder.synchro_velocity_command(v_x=v_x*0.8, v_y=v_y*0.8, v_rot=v_rot*0.8),
+            RobotCommandBuilder.synchro_velocity_command(v_x=v_x, v_y=v_y, v_rot=v_rot),
             end_time_secs=time.time() + cmd_duration)
 
 
@@ -75,6 +76,9 @@ def move_backward(spot):
     spot.move_to_goal(goal_x=-0.5, goal_y=0.0)
 
 def turn_left(spot, duration=0.5):
+    spot.move_by_velocity_control(v_rot=0.5, cmd_duration=duration)
+
+def turn_right(spot, duration=0.5):
     spot.move_by_velocity_control(v_rot=0.5, cmd_duration=duration)
 
 
@@ -94,8 +98,11 @@ def run():
         time.sleep(3)  # Sleep for a short period to let the movement complete
 
         # Turn left
-        turn_left(spot, duration=3)
+        turn_left(spot, duration=(math.pi * 2))
         time.sleep(3) 
+
+        turn_right(spot, duration=(math.pi * 2))
+        time.sleep(3)
     
         
                 
