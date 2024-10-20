@@ -118,10 +118,10 @@ def run():
         time.sleep(3)  # Sleep for a short period to let the movement complete
 
         # Turn left
-        turn_left(spot, duration=(math.pi * 2))
+        turn_left(spot, duration=3.14)
         time.sleep(3) 
 
-        turn_right(spot, duration=(math.pi * 2))
+        turn_right(spot, duration=3.14)
         time.sleep(3)
     
         running_man(spot, forward_speed=1.0, backward_speed=-1.0, step_duration=0.3, repetitions=5)
