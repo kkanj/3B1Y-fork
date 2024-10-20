@@ -81,25 +81,6 @@ def turn_left(spot, duration=0.5):
 def turn_right(spot, duration=0.5):
     spot.move_by_velocity_control(v_rot=0.5, cmd_duration=duration)
 
-def running_man(spot, forward_speed=1.0, backward_speed=-1.0, step_duration=0.3, repetitions=5):
-    """
-    Make Spot perform the 'Running Man' move by quickly alternating between forward and backward steps.
-    
-    Parameters:
-    - spot: The Spot robot object.
-    - forward_speed: Speed when moving forward (m/s).
-    - backward_speed: Speed when moving backward (m/s).
-    - step_duration: Duration of each forward/backward step (seconds).
-    - repetitions: Number of forward/backward cycles.
-    """
-    for _ in range(repetitions):
-        # Step forward
-        spot.move_by_velocity_control(v_x=forward_speed, cmd_duration=step_duration)
-        time.sleep(step_duration)
-        
-        # Step backward
-        spot.move_by_velocity_control(v_x=backward_speed, cmd_duration=step_duration)
-        time.sleep(step_duration)
 
 
 def run():
@@ -124,7 +105,6 @@ def run():
         turn_right(spot, duration=3.14)
         time.sleep(3)
     
-        running_man(spot, forward_speed=1.0, backward_speed=-1.0, step_duration=0.3, repetitions=5)
                 
             
 
